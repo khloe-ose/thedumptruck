@@ -36,7 +36,7 @@ export function Header({
     <>
       <header className="app-header">
         <div className="brand-block" aria-label="Dump Truck">
-          <img className="header-logo" src="/assets/logo.png" alt="Dump Truck Dumping Services" />
+          <img className="header-logo" src={`${import.meta.env.BASE_URL}assets/logo.png`} alt="Dump Truck Dumping Services" />
         </div>
 
         <div className="header-main header-instructions">
@@ -49,7 +49,7 @@ export function Header({
       <div className="header-controls-wrap">
         <section className="guidance-strip" aria-label="Organizer controls">
           <div className="guidance-mark">
-            <img src="/assets/dogs-accent.png" alt="" />
+            <img src={`${import.meta.env.BASE_URL}assets/dogs-accent.png`} alt="" />
           </div>
 
           <div className="guidance-controls">

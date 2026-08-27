@@ -21,6 +21,23 @@ and allow incoming connections if the computer's firewall asks. The LAN address
 can change when the computer reconnects to Wi-Fi, so use the current `Network`
 URL shown at startup.
 
+### Install as “The Dump Truck” on iPhone or iPad
+
+The production build is configured as a Progressive Web App with the main logo
+as its icon and an offline-cached app shell.
+
+The app deploys automatically to:
+
+**https://khloe-ose.github.io/thedumptruck/**
+
+Open that address in Safari, tap **Share**, choose **Add to Home Screen**, enable
+**Open as Web App**, and tap **Add**. The installed app is named **The Dump Truck**.
+
+The current LAN address can also be added to the Home Screen, but it remains
+available only while this computer is running the local server on the same
+network. Imported media remains in the browser and is not included in the
+offline cache; closing or refreshing still clears the active photo session.
+
 ## Production check
 
 ```bash

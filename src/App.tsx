@@ -107,7 +107,7 @@ function App() {
   if (organizer.photos.length === 0 && !hasEntered) {
     return (
       <main className="splash-screen">
-        <img className="splash-logo" src="/assets/logo.png" alt="Dump Truck Dumping Services" />
+        <img className="splash-logo" src={`${import.meta.env.BASE_URL}assets/logo.png`} alt="Dump Truck Dumping Services" />
         <button className="button primary splash-button" type="button" onClick={() => setHasEntered(true)}>
           wna take a dump? 💩
         </button>
@@ -189,7 +189,7 @@ function App() {
             <span>Closing or refreshing this tab clears the photo session.</span>
           </div>
           <div className="session-footer-accent" aria-hidden="true">
-            <img src="/assets/small-accents.png" alt="" />
+            <img src={`${import.meta.env.BASE_URL}assets/small-accents.png`} alt="" />
           </div>
         </footer>
       </main>
