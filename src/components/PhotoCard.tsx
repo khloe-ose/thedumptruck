@@ -8,9 +8,7 @@ import { MediaThumbnail } from './MediaThumbnail'
 
 interface PhotoCardProps {
   photo: PhotoItem
-  globalIndex: number
-  groupPosition: number
-  groupCount: number
+  positionIndex: number
   isLocked: boolean
   isSelected: boolean
   animate: boolean
@@ -21,9 +19,7 @@ interface PhotoCardProps {
 
 export function PhotoCard({
   photo,
-  globalIndex,
-  groupPosition,
-  groupCount,
+  positionIndex,
   isLocked,
   isSelected,
   animate,
@@ -58,7 +54,7 @@ export function PhotoCard({
         animate && !isLocked ? 'shuffle-motion' : '',
       ].filter(Boolean).join(' ')}
       tabIndex={0}
-      aria-label={`Photo ${globalIndex + 1}: ${photo.file.name}${isLocked ? ', first and locked' : ''}`}
+      aria-label={`Photo ${positionIndex + 1}: ${photo.file.name}${isLocked ? ', first and locked' : ''}`}
       aria-pressed={isSelected}
       onClick={() => onSelect(photo.id)}
       onDoubleClick={() => onPreview(photo.id)}
@@ -72,13 +68,15 @@ export function PhotoCard({
       <div className="thumbnail-frame">
         <MediaThumbnail item={photo} onDuration={setVideoDuration} />
 
+        <span className="position-badge" aria-hidden="true">
+          #{String(positionIndex + 1).padStart(2, '0')}
+        </span>
+
         {photo.mediaType === 'video' && (
           <span className="video-badge">
             <Video size={12} /> {videoDuration === null ? 'Video' : formatMediaDuration(videoDuration)}
           </span>
         )}
-
-        {isLocked && <span className="lock-badge"><LockKeyhole size={13} /> First</span>}
 
         <div className="card-hover-actions">
           <button type="button" onClick={(event) => { event.stopPropagation(); onPreview(photo.id) }} aria-label={`Preview ${photo.file.name}`}>
@@ -100,15 +98,6 @@ export function PhotoCard({
         >
           {isLocked ? <LockKeyhole size={14} /> : <GripVertical size={16} />}
         </button>
-      </div>
-
-      <div className="card-caption">
-        <div className="position-row">
-          <strong>#{String(globalIndex + 1).padStart(2, '0')}</strong>
-          <span>{groupPosition}/{groupCount}</span>
-        </div>
-        <p title={photo.file.name}>{photo.file.name}</p>
-        {isLocked && <div className="first-ribbon">First <b>•</b> Locked</div>}
       </div>
     </article>
   )

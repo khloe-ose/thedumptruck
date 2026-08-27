@@ -31,10 +31,9 @@ export function UploadZone({ onFiles, onReport }: UploadZoneProps) {
       <div className="start-logo-lockup">
         <img
           className="start-logo"
-          src="/assets/dump-truck-logo-square.png"
+          src="/assets/logo.png"
           alt="Dump Truck Dumping Services"
         />
-        <p className="maker-credit">Made by <strong>bababkwerpans</strong></p>
       </div>
 
       <div
@@ -100,7 +99,10 @@ export function UploadZone({ onFiles, onReport }: UploadZoneProps) {
         </div>
       </section>
 
-      <div className="privacy-note"><LockKeyhole size={15} /> Your photos and videos stay on this device.</div>
+      <footer className="start-footer">
+        <div className="privacy-note"><LockKeyhole size={15} /> Your photos and videos stay on this device.</div>
+        <img className="start-footer-dogs" src="/assets/dogs-accent.png" alt="" />
+      </footer>
     </main>
   )
 }

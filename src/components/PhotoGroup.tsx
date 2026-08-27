@@ -1,12 +1,11 @@
 import { rectSortingStrategy, SortableContext } from '@dnd-kit/sortable'
-import { LockKeyhole, Shuffle, Unlock } from 'lucide-react'
+import { LockKeyhole, Play, Shuffle, Unlock } from 'lucide-react'
 import type { PhotoItem } from '../types/photo'
 import { PhotoCard } from './PhotoCard'
 
 interface PhotoGroupProps {
   photos: PhotoItem[]
   groupIndex: number
-  globalStart: number
   lockedFirstId?: string
   shuffleCount: number
   selectedId: string | null
@@ -17,12 +16,12 @@ interface PhotoGroupProps {
   onRemove: (id: string) => void
   onUnlock: (groupIndex: number) => void
   onShuffle: (groupIndex: number) => void
+  onPlay: (groupIndex: number) => void
 }
 
 export function PhotoGroup({
   photos,
   groupIndex,
-  globalStart,
   lockedFirstId,
   shuffleCount,
   selectedId,
@@ -33,6 +32,7 @@ export function PhotoGroup({
   onRemove,
   onUnlock,
   onShuffle,
+  onPlay,
 }: PhotoGroupProps) {
   const lockedPhoto = lockedFirstId && photos[0]?.id === lockedFirstId ? photos[0] : undefined
 
@@ -41,8 +41,7 @@ export function PhotoGroup({
       <div className="group-inner-rule">
         <header className="group-header">
           <div>
-            <p className="eyebrow">Contact sheet</p>
-            <h2 id={`group-${groupIndex}-title`}>Group {String(groupIndex + 1).padStart(2, '0')}</h2>
+            <h2 id={`group-${groupIndex}-title`}>Dump {groupIndex + 1}</h2>
           </div>
           <div className="group-count"><strong>{photos.length}</strong><span>Items</span></div>
         </header>
@@ -72,9 +71,7 @@ export function PhotoGroup({
                 <PhotoCard
                   key={`${photo.id}-${animate && !isLocked ? motionNonce : 0}`}
                   photo={photo}
-                  globalIndex={globalStart + localIndex}
-                  groupPosition={localIndex + 1}
-                  groupCount={photos.length}
+                  positionIndex={localIndex}
                   isLocked={isLocked}
                   isSelected={selectedId === photo.id}
                   animate={animate}
@@ -88,9 +85,14 @@ export function PhotoGroup({
         </SortableContext>
 
         <footer className="group-footer">
-          <button className="group-shuffle" type="button" onClick={() => onShuffle(groupIndex)}>
-            <Shuffle size={17} /> Shuffle This Group
-          </button>
+          <div className="group-footer-actions">
+            <button className="group-slideshow" type="button" onClick={() => onPlay(groupIndex)}>
+              <Play size={16} fill="currentColor" /> View Slideshow
+            </button>
+            <button className="group-shuffle" type="button" onClick={() => onShuffle(groupIndex)}>
+              <Shuffle size={17} /> Shuffle This Dump
+            </button>
+          </div>
           <span>{shuffleCount > 0 ? `Group shuffle #${shuffleCount}` : 'Only this sheet will change'}</span>
         </footer>
       </div>

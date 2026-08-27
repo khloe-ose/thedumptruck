@@ -11,7 +11,7 @@ import {
   type DragStartEvent,
 } from '@dnd-kit/core'
 import { sortableKeyboardCoordinates } from '@dnd-kit/sortable'
-import { LockKeyhole, ShieldCheck, Sparkles } from 'lucide-react'
+import { ShieldCheck } from 'lucide-react'
 import { ActionBar } from './components/ActionBar'
 import { ConfirmDialog } from './components/ConfirmDialog'
 import { ExportDialog } from './components/ExportDialog'
@@ -19,6 +19,7 @@ import { Header } from './components/Header'
 import { DragPreviewCard } from './components/PhotoCard'
 import { PhotoGroup } from './components/PhotoGroup'
 import { PhotoLightbox } from './components/PhotoLightbox'
+import { PhotoSlideshow } from './components/PhotoSlideshow'
 import { UploadZone } from './components/UploadZone'
 import { usePhotoOrganizer } from './hooks/usePhotoOrganizer'
 import type { UploadReport } from './types/photo'
@@ -31,8 +32,10 @@ type Confirmation =
 
 function App() {
   const organizer = usePhotoOrganizer()
+  const [hasEntered, setHasEntered] = useState(false)
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [lightboxId, setLightboxId] = useState<string | null>(null)
+  const [slideshowGroupIndex, setSlideshowGroupIndex] = useState<number | null>(null)
   const [activeId, setActiveId] = useState<string | null>(null)
   const [confirmation, setConfirmation] = useState<Confirmation>(null)
   const [exportOpen, setExportOpen] = useState(false)
@@ -101,6 +104,17 @@ function App() {
     if (!moved) setNotice('That first position is locked. Unlock it before dropping a photo there.')
   }
 
+  if (organizer.photos.length === 0 && !hasEntered) {
+    return (
+      <main className="splash-screen">
+        <img className="splash-logo" src="/assets/logo.png" alt="Dump Truck Dumping Services" />
+        <button className="button primary splash-button" type="button" onClick={() => setHasEntered(true)}>
+          wna take a dump? 💩
+        </button>
+      </main>
+    )
+  }
+
   if (organizer.photos.length === 0) {
     return (
       <div className="empty-app-shell">
@@ -134,15 +148,6 @@ function App() {
       />
 
       <main className="workspace">
-        <section className="guidance-strip" aria-label="How to use the organizer">
-          <div className="guidance-mark"><Sparkles size={19} /></div>
-          <div>
-            <strong>Choose the first item for each group, lock it, then shuffle the rest.</strong>
-            <span>Select any photo or video for its actions. Drag unlocked cards freely across the full collection.</span>
-          </div>
-          <div className="guidance-lock"><LockKeyhole size={16} /> Locked positions cannot be displaced</div>
-        </section>
-
         <DndContext
           sensors={sensors}
           collisionDetection={closestCenter}
@@ -156,7 +161,6 @@ function App() {
                 key={groupIndex}
                 photos={group}
                 groupIndex={groupIndex}
-                globalStart={groupIndex * 20}
                 lockedFirstId={organizer.lockedFirstIds[groupIndex]}
                 shuffleCount={organizer.groupShuffleCounts[groupIndex] ?? 0}
                 selectedId={selectedId}
@@ -166,6 +170,7 @@ function App() {
                 onPreview={setLightboxId}
                 onRemove={requestRemove}
                 onUnlock={organizer.unlockFirst}
+                onPlay={setSlideshowGroupIndex}
                 onShuffle={(index) => {
                   organizer.shuffleGroup(index)
                   setNotice(`Group ${index + 1} shuffled. Other groups were left unchanged.`)
@@ -174,20 +179,25 @@ function App() {
             ))}
           </div>
           <DragOverlay dropAnimation={{ duration: 220, easing: 'ease-out' }}>
-            {activeContext ? <DragPreviewCard photo={activeContext.photo} position={activeContext.index + 1} /> : null}
+            {activeContext ? <DragPreviewCard photo={activeContext.photo} position={(activeContext.index % 20) + 1} /> : null}
           </DragOverlay>
         </DndContext>
 
         <footer className="session-footer">
-          <span><ShieldCheck size={16} /> Your photos and videos stay on this device and are never uploaded.</span>
-          <span>Closing or refreshing this tab clears the photo session.</span>
+          <div className="session-footer-copy">
+            <span><ShieldCheck size={16} /> Your photos and videos stay on this device and are never uploaded.</span>
+            <span>Closing or refreshing this tab clears the photo session.</span>
+          </div>
+          <div className="session-footer-accent" aria-hidden="true">
+            <img src="/assets/small-accents.png" alt="" />
+          </div>
         </footer>
       </main>
 
       {selectedContext && (
         <ActionBar
           photo={selectedContext.photo}
-          globalIndex={selectedContext.index}
+          positionIndex={selectedContext.index % 20}
           groupIndex={selectedContext.groupIndex}
           isLocked={selectedContext.isLocked}
           onSetFirst={() => {
@@ -215,6 +225,14 @@ function App() {
         }}
         onUnlock={organizer.unlockFirst}
       />
+
+      {slideshowGroupIndex !== null && (
+        <PhotoSlideshow
+          photos={groups[slideshowGroupIndex] ?? []}
+          dumpIndex={slideshowGroupIndex}
+          onClose={() => setSlideshowGroupIndex(null)}
+        />
+      )}
 
       <ExportDialog open={exportOpen} photos={organizer.photos} onClose={() => setExportOpen(false)} />
       <ConfirmDialog

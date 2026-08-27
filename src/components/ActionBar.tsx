@@ -4,7 +4,7 @@ import { MediaThumbnail } from './MediaThumbnail'
 
 interface ActionBarProps {
   photo: PhotoItem
-  globalIndex: number
+  positionIndex: number
   groupIndex: number
   isLocked: boolean
   onSetFirst: () => void
@@ -16,7 +16,7 @@ interface ActionBarProps {
 
 export function ActionBar({
   photo,
-  globalIndex,
+  positionIndex,
   groupIndex,
   isLocked,
   onSetFirst,
@@ -29,7 +29,7 @@ export function ActionBar({
     <aside className="selected-action-bar" aria-label="Selected photo actions">
       <div className="selected-summary">
         <MediaThumbnail item={photo} />
-        <span><b>#{String(globalIndex + 1).padStart(2, '0')} · Group {groupIndex + 1}</b><em>{photo.file.name}</em></span>
+        <span><b>#{String(positionIndex + 1).padStart(2, '0')} · Dump {groupIndex + 1}</b><em>{photo.file.name}</em></span>
       </div>
       <div className="selected-actions">
         {isLocked ? (

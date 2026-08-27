@@ -13,6 +13,14 @@ npm run dev
 
 Open the local URL printed by Vite, usually `http://localhost:5173`.
 
+### Open on an iPad
+
+Connect the iPad to the same Wi-Fi network as the computer, run `npm run dev`,
+then open the `Network` URL printed by Vite in Safari. Keep the terminal running
+and allow incoming connections if the computer's firewall asks. The LAN address
+can change when the computer reconnects to Wi-Fi, so use the current `Network`
+URL shown at startup.
+
 ## Production check
 
 ```bash
